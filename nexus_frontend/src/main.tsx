@@ -6,6 +6,7 @@ import App from "./App";
 import AppThemeProvider from "./components/providers/AppThemeProvider";
 import { applyThemeToDocument, THEME_STORAGE_KEY } from "./store/theme";
 import "./styles/index.css";
+import "./mock";
 
 function getPersistedDarkMode(): boolean {
   try {
