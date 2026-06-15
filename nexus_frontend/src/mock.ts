@@ -135,6 +135,20 @@ mock.onGet(/\/notifications\/unread-count\//).reply(200, {
 
 mock.onGet(/\/notifications\//).reply(200, []);
 
+// Mock Payment / Finance Dashboard
+mock.onGet(/\/payment\/dashboard\//).reply(200, {
+  kpi: {
+    total_receivable: 1000000,
+    total_received: 500000,
+    total_invoiced: 600000,
+    partial_count: 5,
+    overdue_amount: 50000,
+    overdue_count: 2,
+    collection_pct: 83.3
+  },
+  monthly_trend: []
+});
+
 // Catch-all GET
 mock.onGet(/.*/).reply((config) => {
   const url = config.url || "";
@@ -143,6 +157,7 @@ mock.onGet(/.*/).reply((config) => {
     url.includes("dropdown") ||
     url.includes("types") ||
     url.includes("balances") ||
+    url.includes("requests") ||
     url.includes("my-payslips") ||
     url.includes("unread-count")
   ) {
