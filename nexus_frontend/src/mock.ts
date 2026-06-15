@@ -149,6 +149,56 @@ mock.onGet(/\/payment\/dashboard\//).reply(200, {
   monthly_trend: []
 });
 
+// Mock Projects List
+mock.onGet(/\/projects\//).reply((config) => {
+  if (config.url?.includes("dropdown")) return [200, [
+    { id: "1", name: "Project Alpha" },
+    { id: "2", name: "Project Beta" }
+  ]];
+  return [200, {
+    count: 2,
+    results: [
+      { id: "1", code: "PRJ-001", name: "Project Alpha", client_name: "Acme Corp", status: "ACTIVE", health: "ON_TRACK", manager_name: "Alice", start_date: "2026-01-01", end_date: "2026-12-31" },
+      { id: "2", code: "PRJ-002", name: "Project Beta", client_name: "Globex", status: "ACTIVE", health: "AT_RISK", manager_name: "Bob", start_date: "2026-03-01", end_date: "2026-09-30" }
+    ]
+  }];
+});
+
+// Mock Employees List
+mock.onGet(/\/employees\//).reply((config) => {
+  if (config.url?.includes("dropdown")) return [200, [
+    { id: "1", name: "Alice Johnson" },
+    { id: "2", name: "Bob Smith" }
+  ]];
+  if (config.url?.includes("org-tree")) return [200, {
+    parent: null,
+    nodes: [
+      { id: "1", name: "Alice Johnson", employee_code: "EMP-001", designation: "CEO", department: "Executive", manager_id: null, avatar: null },
+      { id: "2", name: "Bob Smith", employee_code: "EMP-002", designation: "CTO", department: "Engineering", manager_id: "1", avatar: null },
+      { id: "3", name: "Carol Davis", employee_code: "EMP-003", designation: "CFO", department: "Finance", manager_id: "1", avatar: null },
+      { id: "4", name: "Dave Wilson", employee_code: "EMP-004", designation: "Engineering Manager", department: "Engineering", manager_id: "2", avatar: null },
+      { id: "5", name: "Eve Brown", employee_code: "EMP-005", designation: "Developer", department: "Engineering", manager_id: "4", avatar: null }
+    ]
+  }];
+  return [200, {
+    count: 2,
+    results: [
+      { id: "1", full_name: "Alice Johnson", employee_code: "EMP-001", department: "Executive", designation: "CEO", status: "ACTIVE" },
+      { id: "2", full_name: "Bob Smith", employee_code: "EMP-002", department: "Engineering", designation: "CTO", status: "ACTIVE" }
+    ]
+  }];
+});
+
+// Mock Work Items (Tickets)
+mock.onGet(/\/work-items\//).reply(200, {
+  count: 3,
+  results: [
+    { id: "1", ticket_number: "TKT-101", title: "Setup Database", type: "TASK", status: "DONE", priority: "HIGH", assignee_name: "Bob Smith", project_code: "PRJ-001" },
+    { id: "2", ticket_number: "TKT-102", title: "Create API", type: "STORY", status: "IN_PROGRESS", priority: "MEDIUM", assignee_name: "Dave Wilson", project_code: "PRJ-001" },
+    { id: "3", ticket_number: "TKT-103", title: "Fix Login Bug", type: "BUG", status: "OPEN", priority: "CRITICAL", assignee_name: "Eve Brown", project_code: "PRJ-002" }
+  ]
+});
+
 // Catch-all GET
 mock.onGet(/.*/).reply((config) => {
   const url = config.url || "";
@@ -159,7 +209,8 @@ mock.onGet(/.*/).reply((config) => {
     url.includes("balances") ||
     url.includes("requests") ||
     url.includes("my-payslips") ||
-    url.includes("unread-count")
+    url.includes("unread-count") ||
+    url.includes("feed")
   ) {
     return [200, []];
   }
