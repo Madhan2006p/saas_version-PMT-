@@ -54,7 +54,7 @@ mock.onGet(/\/users\/me\//).reply(() => {
   }];
 });
 
-// Mock Dashboard
+// Mock PMO Dashboard
 mock.onGet(/\/dashboard\/pmo\//).reply(200, {
   projects: { active: 12, total: 15, on_track: 8, at_risk: 3, delayed: 1 },
   logging: {
@@ -80,6 +80,45 @@ mock.onGet(/\/dashboard\/pmo\//).reply(200, {
     ]
   },
   alerts: []
+});
+
+// Mock HRMS Dashboard
+mock.onGet(/\/dashboard\/hrms\//).reply(200, {
+  date: "2026-06-15",
+  headcount: { total_active: 50, new_joiners_month: 5, dept_distribution: [], role_distribution: [] },
+  attendance_today: { PRESENT: 45, WFH: 2, HALF_DAY: 0, ON_LEAVE: 3, ABSENT: 0, not_marked: 0, attendance_rate: 94 },
+  leave: { pending_count: 5, stats_this_month: { pending: 5, approved: 10, rejected: 1 }, pending_list: [] },
+  recent_joiners: [],
+  payroll: { total: 50, draft: 0, finalized: 50, paid: 50 }
+});
+
+// Mock Executive Dashboard
+mock.onGet(/\/dashboard\/executive\//).reply(200, {
+  fy: { start_year: 2026, label: "FY26", start_date: "2026-04-01", end_date: "2027-03-31" },
+  available_fy_years: [2026, 2025],
+  employees: { total: 50, active: 50 },
+  vendors: { total: 10, active: 8 },
+  projects: { total: 20, active: 15 },
+  finance: { budget_total: 1000000, invoiced: 500000, received: 450000, pending: 50000, expenses: 200000 },
+  clients_map: [],
+  payment_monthly: [],
+  billing_monthly: [],
+  project_portfolio: [],
+  project_pipeline: { breakdown: [] }
+});
+
+// Mock Employee Dashboard
+mock.onGet(/\/dashboard\/employee\//).reply(200, {
+  profile: { full_name: "Mock User", employee_code: "MOCK-001" },
+  work_items: { open: 5, in_progress: 2, in_review: 1, done: 10, total: 18, overdue: 0 },
+  recent_items: [],
+  pending_followups: [],
+  my_projects: [],
+  timesheet: { weekly_hours: 40, expected_hours: 40, daily_logs: [] },
+  recent_logs: [],
+  attendance_today: { status: "PRESENT", check_in: "09:00:00", check_out: null },
+  leave_balances: [],
+  recent_leaves: []
 });
 
 // Mock Notifications
