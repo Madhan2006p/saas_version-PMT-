@@ -47,7 +47,7 @@ import FollowUpsPage from "@/pages/followups/FollowUpsPage";
 import ExecutiveDashboardPage from "@/pages/dashboard/ExecutiveDashboardPage";
 import MyLeavesPage from "@/pages/employees/MyLeavesPage";
 function RequireAuth({ children }: { children: React.ReactNode }) {
-  const token       = "dummy-token"; // Force token
+  const token       = useAuthStore((s) => s.token);
   const user        = useAuthStore((s) => s.user);
   const permissions = useAuthStore((s) => s.permissions);
   const setUser     = useAuthStore((s) => s.setUser);

@@ -42,7 +42,7 @@ interface AuthState {
 export const useAuthStore = create<AuthState>()(
   persist(
     (set, get) => ({
-      token: "dummy-token",
+      token: null,
       refreshToken: null,
       user: null,
       permissions: [],
@@ -62,7 +62,7 @@ export const useAuthStore = create<AuthState>()(
       setPermissions: (permissions) => set({ permissions }),
 
       clearAuth: () => {
-        set({ token: "dummy-token", refreshToken: null, user: null, permissions: [] });
+        set({ token: null, refreshToken: null, user: null, permissions: [] });
         localStorage.removeItem(ACCESS_TOKEN_KEY);
         localStorage.removeItem(REFRESH_TOKEN_KEY);
       },
@@ -79,7 +79,7 @@ export const useAuthStore = create<AuthState>()(
             body: JSON.stringify({ refresh_token: refreshToken }),
           }).catch(() => {});
         }
-        set({ token: "dummy-token", refreshToken: null, user: null, permissions: [] });
+        set({ token: null, refreshToken: null, user: null, permissions: [] });
         localStorage.removeItem(ACCESS_TOKEN_KEY);
         localStorage.removeItem(REFRESH_TOKEN_KEY);
       },
