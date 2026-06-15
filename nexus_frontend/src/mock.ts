@@ -62,6 +62,13 @@ mock.onGet(/\/dashboard\/pmo\//).reply(200, {
   alerts: []
 });
 
+// Mock Notifications
+mock.onGet(/\/notifications\/unread-count\//).reply(200, {
+  unread_count: 0
+});
+
+mock.onGet(/\/notifications\//).reply(200, []);
+
 // Any other GET requests return a fake pagination list
 mock.onGet(/.*/).reply(200, {
   count: 0,
