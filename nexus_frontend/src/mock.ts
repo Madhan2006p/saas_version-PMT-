@@ -152,14 +152,16 @@ mock.onGet(/\/payment\/dashboard\//).reply(200, {
 // Mock Projects List
 mock.onGet(/\/projects\//).reply((config) => {
   if (config.url?.includes("dropdown")) return [200, [
-    { id: "1", name: "Project Alpha" },
-    { id: "2", name: "Project Beta" }
+    { id: "1", name: "Nexus SaaS Platform" },
+    { id: "2", name: "Mobile App Redesign" },
+    { id: "3", name: "Client CRM Integration" }
   ]];
   return [200, {
-    count: 2,
+    count: 3,
     results: [
-      { id: "1", code: "PRJ-001", name: "Project Alpha", client_name: "Acme Corp", status: "ACTIVE", health: "ON_TRACK", manager_name: "Alice", start_date: "2026-01-01", end_date: "2026-12-31" },
-      { id: "2", code: "PRJ-002", name: "Project Beta", client_name: "Globex", status: "ACTIVE", health: "AT_RISK", manager_name: "Bob", start_date: "2026-03-01", end_date: "2026-09-30" }
+      { id: "1", code: "PRJ-001", name: "Nexus SaaS Platform", client_name: "Acme Corp", status: "ACTIVE", health: "ON_TRACK", manager_name: "Alice Johnson", start_date: "2026-01-01", end_date: "2026-12-31", workflow_state_slug: "IN_PROGRESS" },
+      { id: "2", code: "PRJ-002", name: "Mobile App Redesign", client_name: "Globex", status: "ACTIVE", health: "AT_RISK", manager_name: "Bob Smith", start_date: "2026-03-01", end_date: "2026-09-30", workflow_state_slug: "ENQUIRY" },
+      { id: "3", code: "PRJ-003", name: "Client CRM Integration", client_name: "Initech", status: "ACTIVE", health: "ON_TRACK", manager_name: "Carol Davis", start_date: "2026-06-01", end_date: "2026-10-30", workflow_state_slug: "FOLLOW_UP" }
     ]
   }];
 });
@@ -225,9 +227,19 @@ mock.onGet(/\/timesheets\/reporting\/dashboard\//).reply(200, {
 
 // Mock Workflow States
 mock.onGet(/\/workflow\/states\//).reply(200, [
-  { id: "1", name: "To Do", slug: "OPEN", label: "To Do", color_code: "#6366f1", order: 1, is_initial: true, is_final: false },
-  { id: "2", name: "In Progress", slug: "IN_PROGRESS", label: "In Progress", color_code: "#f97316", order: 2, is_initial: false, is_final: false },
-  { id: "3", name: "Done", slug: "DONE", label: "Done", color_code: "#16a34a", order: 3, is_initial: false, is_final: true }
+  { id: "1", name: "Enquiry", slug: "ENQUIRY", label: "Enquiry", color_code: "#a855f7", order: 1, is_initial: true, is_final: false },
+  { id: "2", name: "Follow Up", slug: "FOLLOW_UP", label: "Follow Up", color_code: "#f59e0b", order: 2, is_initial: false, is_final: false },
+  { id: "3", name: "In Progress", slug: "IN_PROGRESS", label: "In Progress", color_code: "#3b82f6", order: 3, is_initial: false, is_final: false },
+  { id: "4", name: "Completed", slug: "COMPLETED", label: "Completed", color_code: "#10b981", order: 4, is_initial: false, is_final: true },
+  { id: "5", name: "Cancelled", slug: "CANCELLED", label: "Cancelled", color_code: "#ef4444", order: 5, is_initial: false, is_final: true }
+]);
+
+// Mock Workflow Transitions
+mock.onGet(/\/workflow\/transitions\//).reply(200, [
+  { id: "1", source_state_detail: { slug: "ENQUIRY" }, destination_state_detail: { slug: "FOLLOW_UP" }, label: "Send Follow Up" },
+  { id: "2", source_state_detail: { slug: "FOLLOW_UP" }, destination_state_detail: { slug: "IN_PROGRESS" }, label: "Start Project" },
+  { id: "3", source_state_detail: { slug: "IN_PROGRESS" }, destination_state_detail: { slug: "COMPLETED" }, label: "Complete" },
+  { id: "4", source_state_detail: { slug: "ENQUIRY" }, destination_state_detail: { slug: "CANCELLED" }, label: "Cancel" }
 ]);
 
 // Catch-all GET
@@ -244,7 +256,9 @@ mock.onGet(/.*/).reply((config) => {
     url.includes("feed") ||
     url.includes("hr-compliance") ||
     url.includes("schedule") ||
-    url.includes("transitions")
+    url.includes("transitions") ||
+    url.includes("review") ||
+    url.includes("org-tree")
   ) {
     return [200, []];
   }
