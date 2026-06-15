@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: pmt-backend
+    env: python
+    rootDir: nexus_backend
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn core.wsgi:application"
+    envVars:
+      - key: DEBUG
+        value: "False"
+      - key: ALLOWED_HOSTS
+        value: "*"
+      - key: CORS_ALLOWED_ORIGINS
+        value: "https://pmt-frontend.onrender.com"
+
+  - type: web
+    name: pmt-frontend
+    env: static
+    rootDir: nexus_frontend
+    buildCommand: "npm install && npm run build"
+    staticPublishPath: "./dist"
+    envVars:
+      - key: VITE_API_BASE_URL
+        value: "https://pmt-backend.onrender.com/pmt/api/v1"
