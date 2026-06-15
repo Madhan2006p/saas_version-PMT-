@@ -39,59 +39,35 @@ interface AuthState {
   logout: () => void;
 }
 
-export const useAuthStore = create<AuthState>()(
-  persist(
-    (set, get) => ({
-      token: null,
-      refreshToken: null,
-      user: null,
-      permissions: [],
+export const useAuthStore = create<AuthState>((set, get) => ({
+  token: null,
+  refreshToken: null,
+  user: null,
+  permissions: [],
 
-      setToken: (token) => {
-        set({ token });
-        localStorage.setItem(ACCESS_TOKEN_KEY, token);
-      },
+  setToken: (token) => {
+    set({ token });
+    localStorage.setItem(ACCESS_TOKEN_KEY, token);
+  },
 
-      setRefreshToken: (token) => {
-        set({ refreshToken: token });
-        localStorage.setItem(REFRESH_TOKEN_KEY, token);
-      },
+  setRefreshToken: (token) => {
+    set({ refreshToken: token });
+    localStorage.setItem(REFRESH_TOKEN_KEY, token);
+  },
 
-      setUser: (user) => set({ user }),
+  setUser: (user) => set({ user }),
 
-      setPermissions: (permissions) => set({ permissions }),
+  setPermissions: (permissions) => set({ permissions }),
 
-      clearAuth: () => {
-        set({ token: null, refreshToken: null, user: null, permissions: [] });
-        localStorage.removeItem(ACCESS_TOKEN_KEY);
-        localStorage.removeItem(REFRESH_TOKEN_KEY);
-      },
+  clearAuth: () => {
+    set({ token: null, refreshToken: null, user: null, permissions: [] });
+    localStorage.removeItem(ACCESS_TOKEN_KEY);
+    localStorage.removeItem(REFRESH_TOKEN_KEY);
+  },
 
-      logout: () => {
-        const { refreshToken } = get();
-        if (refreshToken) {
-          fetch("/pmt/api/v1/auth/logout/", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${localStorage.getItem(ACCESS_TOKEN_KEY) ?? ""}`,
-            },
-            body: JSON.stringify({ refresh_token: refreshToken }),
-          }).catch(() => {});
-        }
-        set({ token: null, refreshToken: null, user: null, permissions: [] });
-        localStorage.removeItem(ACCESS_TOKEN_KEY);
-        localStorage.removeItem(REFRESH_TOKEN_KEY);
-      },
-    }),
-    {
-      name: "pmt-auth",
-      partialize: (state) => ({
-        token: state.token,
-        refreshToken: state.refreshToken,
-        user: state.user,
-        permissions: state.permissions,
-      }),
-    }
-  )
-);
+  logout: () => {
+    set({ token: null, refreshToken: null, user: null, permissions: [] });
+    localStorage.removeItem(ACCESS_TOKEN_KEY);
+    localStorage.removeItem(REFRESH_TOKEN_KEY);
+  },
+}));
