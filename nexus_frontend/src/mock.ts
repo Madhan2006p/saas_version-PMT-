@@ -4,34 +4,54 @@ import client from "./services/api";
 const mock = new MockAdapter(client, { delayResponse: 500 });
 
 // Mock Login
-mock.onPost(/\/auth\/token\//).reply(200, {
-  access_token: "fake-access-token",
-  refresh_token: "fake-refresh-token",
+mock.onPost(/\/auth\/token\//).reply((config) => {
+  const data = JSON.parse(config.data);
+  const username = data.username || "HIT-001";
+  localStorage.setItem("mock_username", username);
+  return [200, {
+    access_token: "fake-access-token",
+    refresh_token: "fake-refresh-token",
+  }];
 });
 
 // Mock User Profile
-mock.onGet(/\/users\/me\//).reply(200, {
-  id: 1,
-  username: "hit-admin",
-  full_name: "Admin User",
-  employee_code: "HIT-001",
-  designation: "Manager",
-  department: "PMO",
-  grade: "A",
-  keycloak_group: "Admin",
-  is_pmo: true,
-  is_manager: true,
-  is_staff: true,
-  is_superuser: true,
-  permissions: [
+mock.onGet(/\/users\/me\//).reply(() => {
+  const username = localStorage.getItem("mock_username") || "HIT-001";
+  const isBasic = username === "HIT-004";
+  
+  const allPermissions = [
     "pmt.dashboard.own.view",
     "pmt.dashboard.project.view",
     "pmt.dashboard.hrms.view",
     "pmt.dashboard.executive.view",
     "pmt.project.view",
     "pmt.project.workitem.view",
-    "pmt.hrms.employee.view"
-  ]
+    "pmt.hrms.employee.view",
+    "pmt.project.timesheet.view"
+  ];
+  
+  // Give basic user fewer permissions so standard features hide
+  const basicPermissions = [
+    "pmt.dashboard.own.view",
+    "pmt.project.view",
+    "pmt.project.workitem.view"
+  ];
+
+  return [200, {
+    id: isBasic ? 4 : 1,
+    username: username,
+    full_name: isBasic ? "Basic User" : "Standard User",
+    employee_code: username,
+    designation: isBasic ? "Developer" : "Manager",
+    department: "PMO",
+    grade: "A",
+    keycloak_group: isBasic ? "User" : "Admin",
+    is_pmo: !isBasic,
+    is_manager: !isBasic,
+    is_staff: !isBasic,
+    is_superuser: !isBasic,
+    permissions: isBasic ? basicPermissions : allPermissions
+  }];
 });
 
 // Mock Dashboard
