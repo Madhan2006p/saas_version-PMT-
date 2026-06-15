@@ -24,11 +24,13 @@ mock.onGet(/\/users\/me\//).reply(200, {
   is_staff: true,
   is_superuser: true,
   permissions: [
-    "dashboard.pmo",
-    "project.view",
-    "project.dashboard",
-    "dashboard.own",
-    "hrms.employee.view"
+    "pmt.dashboard.own.view",
+    "pmt.dashboard.project.view",
+    "pmt.dashboard.hrms.view",
+    "pmt.dashboard.executive.view",
+    "pmt.project.view",
+    "pmt.project.workitem.view",
+    "pmt.hrms.employee.view"
   ]
 });
 
