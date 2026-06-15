@@ -199,6 +199,37 @@ mock.onGet(/\/work-items\//).reply(200, {
   ]
 });
 
+// Mock Attendance Overview
+mock.onGet(/\/attendance\/overview\//).reply(200, {
+  date: "2026-06-15",
+  total_employees: 50,
+  marked: 48,
+  not_marked: 2,
+  counts: { PRESENT: 45, WFH: 2, ON_LEAVE: 1 },
+  week_trend: [
+    { date: "2026-06-10", present: 48, absent: 2 },
+    { date: "2026-06-11", present: 49, absent: 1 },
+    { date: "2026-06-12", present: 47, absent: 3 }
+  ]
+});
+
+// Mock Timesheet Reporting Dashboard
+mock.onGet(/\/timesheets\/reporting\/dashboard\//).reply(200, {
+  pending_reviews: 5,
+  missing_timesheets: 2,
+  rejected_this_week: 0,
+  missing_details: [
+    { employee_id: "EMP-005", employee_name: "Eve Brown" }
+  ]
+});
+
+// Mock Workflow States
+mock.onGet(/\/workflow\/states\//).reply(200, [
+  { id: "1", name: "To Do", slug: "OPEN", label: "To Do", color_code: "#6366f1", order: 1, is_initial: true, is_final: false },
+  { id: "2", name: "In Progress", slug: "IN_PROGRESS", label: "In Progress", color_code: "#f97316", order: 2, is_initial: false, is_final: false },
+  { id: "3", name: "Done", slug: "DONE", label: "Done", color_code: "#16a34a", order: 3, is_initial: false, is_final: true }
+]);
+
 // Catch-all GET
 mock.onGet(/.*/).reply((config) => {
   const url = config.url || "";
@@ -210,7 +241,10 @@ mock.onGet(/.*/).reply((config) => {
     url.includes("requests") ||
     url.includes("my-payslips") ||
     url.includes("unread-count") ||
-    url.includes("feed")
+    url.includes("feed") ||
+    url.includes("hr-compliance") ||
+    url.includes("schedule") ||
+    url.includes("transitions")
   ) {
     return [200, []];
   }
