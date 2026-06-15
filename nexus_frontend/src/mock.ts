@@ -246,11 +246,11 @@ mock.onGet(/\/workflow\/states\/($|\?)/).reply(200, [
 ]);
 
 // Mock Workflow Transitions
-mock.onGet(/\/workflow\/transitions\//).reply(200, [
-  { id: "1", source_state_detail: { slug: "ENQUIRY" }, destination_state_detail: { slug: "FOLLOW_UP" }, label: "Send Follow Up" },
-  { id: "2", source_state_detail: { slug: "FOLLOW_UP" }, destination_state_detail: { slug: "IN_PROGRESS" }, label: "Start Project" },
-  { id: "3", source_state_detail: { slug: "IN_PROGRESS" }, destination_state_detail: { slug: "COMPLETED" }, label: "Complete" },
-  { id: "4", source_state_detail: { slug: "ENQUIRY" }, destination_state_detail: { slug: "CANCELLED" }, label: "Cancel" }
+mock.onGet(/\/workflow\/transitions\/($|\?)/).reply(200, [
+  { id: "1", source_state: "1", destination_state: "2", source_state_detail: { id: "1", name: "Enquiry", slug: "ENQUIRY" }, destination_state_detail: { id: "2", name: "Follow Up", slug: "FOLLOW_UP" }, label: "Send Follow Up", group_names: [] },
+  { id: "2", source_state: "2", destination_state: "3", source_state_detail: { id: "2", name: "Follow Up", slug: "FOLLOW_UP" }, destination_state_detail: { id: "3", name: "In Progress", slug: "IN_PROGRESS" }, label: "Start Project", group_names: [] },
+  { id: "3", source_state: "3", destination_state: "4", source_state_detail: { id: "3", name: "In Progress", slug: "IN_PROGRESS" }, destination_state_detail: { id: "4", name: "Completed", slug: "COMPLETED" }, label: "Complete", group_names: [] },
+  { id: "4", source_state: "1", destination_state: "5", source_state_detail: { id: "1", name: "Enquiry", slug: "ENQUIRY" }, destination_state_detail: { id: "5", name: "Cancelled", slug: "CANCELLED" }, label: "Cancel", group_names: [] }
 ]);
 
 // Catch-all GET
