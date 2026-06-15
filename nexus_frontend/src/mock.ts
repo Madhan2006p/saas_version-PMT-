@@ -225,8 +225,19 @@ mock.onGet(/\/timesheets\/reporting\/dashboard\//).reply(200, {
   ]
 });
 
+// Mock Workflow Content Type IDs
+mock.onGet(/\/workflow\/states\/content-type-id\//).reply((config) => {
+  const url = new URL(`http://localhost${config.url}`);
+  const appLabel = url.searchParams.get("app_label") || "projects";
+  const model = url.searchParams.get("model") || "project";
+  let id = 1;
+  if (appLabel === "tickets") id = 2;
+  if (appLabel === "followups") id = 3;
+  return [200, { id, app_label: appLabel, model }];
+});
+
 // Mock Workflow States
-mock.onGet(/\/workflow\/states\//).reply(200, [
+mock.onGet(/\/workflow\/states\/($|\?)/).reply(200, [
   { id: "1", name: "Enquiry", slug: "ENQUIRY", label: "Enquiry", color_code: "#a855f7", order: 1, is_initial: true, is_final: false },
   { id: "2", name: "Follow Up", slug: "FOLLOW_UP", label: "Follow Up", color_code: "#f59e0b", order: 2, is_initial: false, is_final: false },
   { id: "3", name: "In Progress", slug: "IN_PROGRESS", label: "In Progress", color_code: "#3b82f6", order: 3, is_initial: false, is_final: false },
