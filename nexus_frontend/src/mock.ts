@@ -269,7 +269,8 @@ mock.onGet(/.*/).reply((config) => {
     url.includes("schedule") ||
     url.includes("transitions") ||
     url.includes("review") ||
-    url.includes("org-tree")
+    url.includes("org-tree") ||
+    url.includes("policy-documents")
   ) {
     return [200, []];
   }
