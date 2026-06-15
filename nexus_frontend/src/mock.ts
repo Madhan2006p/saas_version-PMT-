@@ -109,7 +109,7 @@ mock.onGet(/\/dashboard\/executive\//).reply(200, {
 
 // Mock Employee Dashboard
 mock.onGet(/\/dashboard\/employee\//).reply(200, {
-  profile: { full_name: "Mock User", employee_code: "MOCK-001" },
+  profile: { full_name: "Mock User", employee_code: "MOCK-001", shift_applicable: false },
   work_items: { open: 5, in_progress: 2, in_review: 1, done: 10, total: 18, overdue: 0 },
   recent_items: [],
   pending_followups: [],
@@ -118,7 +118,14 @@ mock.onGet(/\/dashboard\/employee\//).reply(200, {
   recent_logs: [],
   attendance_today: { status: "PRESENT", check_in: "09:00:00", check_out: null },
   leave_balances: [],
-  recent_leaves: []
+  recent_leaves: [],
+  leave_requests: [],
+  attendance_month: { present: 20, wfh: 0, half_day: 0, on_leave: 1 },
+  payslips: [],
+  payslips_fy: "FY26",
+  wfh_status: { wfh_enabled: true, pending_wfh_request: false, approved_wfh_today: false },
+  checkin_stats: { avg_working_hours: 8, avg_break_minutes: 60, total_working_hours: 160, total_break_minutes: 1200, working_days_count: 20, on_time: 19, late: 1, early: 0 },
+  reporting_hierarchy: {}
 });
 
 // Mock Notifications
@@ -128,10 +135,21 @@ mock.onGet(/\/notifications\/unread-count\//).reply(200, {
 
 mock.onGet(/\/notifications\//).reply(200, []);
 
-// Any other GET requests return a fake pagination list
-mock.onGet(/.*/).reply(200, {
-  count: 0,
-  results: []
+// Catch-all GET
+mock.onGet(/.*/).reply((config) => {
+  const url = config.url || "";
+  // Endpoints that strictly expect a flat array
+  if (
+    url.includes("dropdown") ||
+    url.includes("types") ||
+    url.includes("balances") ||
+    url.includes("my-payslips") ||
+    url.includes("unread-count")
+  ) {
+    return [200, []];
+  }
+  // Default to paginated response
+  return [200, { count: 0, results: [] }];
 });
 
 // Pass through
