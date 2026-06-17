@@ -545,7 +545,7 @@ export default function FollowUpsPage() {
             onChange={(v) => setStatusFilter(v || "")}
             options={BOARD_COLUMNS.map((c) => ({ value: c.slug, label: c.label }))}
           />
-          {canCreate && (
+          {canCreate && viewMode !== "calendar" && (
             <Button type="primary" icon={<PlusOutlined />} onClick={openCreate}>
               Schedule
             </Button>
