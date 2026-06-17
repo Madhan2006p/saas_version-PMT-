@@ -60,74 +60,8 @@ client.interceptors.response.use(
 
     // ── 401: attempt silent token refresh ─────────────────────────────────────
     if (status === 401) {
-      // Login endpoint failures should bubble up to the LoginPage error handler
-      if (url.includes("/auth/token/") || url.includes("/auth/login/")) {
-        return Promise.reject(error);
-      }
-
-      // If another refresh is already in progress, queue this request
-      if (isRefreshing) {
-        return new Promise<string>((resolve, reject) => {
-          failedQueue.push({ resolve, reject });
-        })
-          .then((newToken) => {
-            originalRequest.headers.Authorization = `Bearer ${newToken}`;
-            return client(originalRequest);
-          })
-          .catch((err) => Promise.reject(err));
-      }
-
-      // Prevent retrying the same request twice
-      if (originalRequest._retry) {
-        clearAuthAndRedirect();
-        return Promise.reject(error);
-      }
-
-      originalRequest._retry = true;
-      isRefreshing = true;
-
-      const refreshToken = localStorage.getItem(REFRESH_TOKEN_KEY);
-
-      if (!refreshToken) {
-        // No refresh token stored — session is gone
-        isRefreshing = false;
-        processQueue(error, null);
-        clearAuthAndRedirect();
-        return Promise.reject(error);
-      }
-
-      try {
-        // Call refresh endpoint (bypass our interceptor by using axios directly)
-        const { data } = await axios.post<any>(
-          `${API_BASE}/auth/token/refresh/`,
-          { refresh_token: refreshToken },
-          { headers: { "Content-Type": "application/json" } }
-        );
-
-        const newAccessToken = data.access_token || data.access;
-
-        // Persist new tokens
-        useAuthStore.getState().setToken(newAccessToken);
-        const newRefreshToken = data.refresh_token || data.refresh;
-        if (newRefreshToken) {
-          useAuthStore.getState().setRefreshToken(newRefreshToken);
-        }
-
-        // Unblock all queued requests with the new token
-        processQueue(null, newAccessToken);
-
-        // Retry the original failed request
-        originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
-        return client(originalRequest);
-      } catch (refreshError) {
-        // Refresh itself failed (token expired/revoked) — force re-login
-        processQueue(refreshError, null);
-        message.error("Session expired. Please log in again.", 4);
-        clearAuthAndRedirect();
-        return Promise.reject(refreshError);
-      } finally {
-        isRefreshing = false;
-      }
+      console.error("401 Unauthorized encountered but bypassed for mock prototype");
+      return Promise.reject(error);
     }
 
     // ── 403: show permission error (skip if it's actually an auth/token error) ──

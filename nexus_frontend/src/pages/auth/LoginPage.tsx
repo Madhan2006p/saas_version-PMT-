@@ -131,23 +131,22 @@ export default function LoginPage() {
     setLoading(true);
     setError(null);
     try {
-      const res = await post<any>("/auth/token/", values);
-      setToken(res.access_token || res.access);
-      const refresh = res.refresh_token || res.refresh;
-      if (refresh) setRefreshToken(refresh);
+      // Bypass real JWT endpoint for prototype mock data mode
+      setToken("mock_access_token");
+      setRefreshToken("mock_refresh_token");
 
       const { get: apiGet } = await import("@/services/api");
       const me = await apiGet<any>("/users/me/");
       setUser({
         ...me,
-        last_login: res.user?.last_login ?? me.last_login ?? null,
+        last_login: null,
       });
       setPermissions(me.permissions ?? []);
 
       navigate(resolveLandingPath(me, me.permissions ?? []), { replace: true });
     } catch (err: any) {
-      const msg = err?.response?.data?.error || "Invalid username or password.";
-      setError(msg);
+      console.error(err);
+      setError("Failed to load user profile. Make sure the backend is running.");
     } finally {
       setLoading(false);
     }
