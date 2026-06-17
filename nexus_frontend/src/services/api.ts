@@ -31,6 +31,11 @@ function clearAuthAndRedirect() {
 
 // ── Request interceptor — attach Bearer token ──────────────────────────────────
 client.interceptors.request.use((config) => {
+  // Strip leading slash from URL to prevent Axios from overriding the baseURL path
+  if (config.url && config.url.startsWith("/")) {
+    config.url = config.url.substring(1);
+  }
+  
   const token = localStorage.getItem(ACCESS_TOKEN_KEY);
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
