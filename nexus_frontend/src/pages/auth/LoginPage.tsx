@@ -178,19 +178,27 @@ export default function LoginPage() {
     setLoading(true);
     setError(null);
     try {
-      // Bypass real JWT endpoint for prototype mock data mode
+      // Completely bypass backend for prototype
       setToken("mock_access_token");
       setRefreshToken("mock_refresh_token");
 
-      const { get: apiGet } = await import("@/services/api");
-      const me = await apiGet<any>("/users/me/");
-      setUser({
-        ...me,
+      // Hardcoded Standard User Profile
+      const standardUser = {
+        id: "usr-002",
+        keycloak_id: "kc-67890",
+        employee_code: "HIT-002",
+        first_name: "Standard",
+        last_name: "User",
+        email: "user@hackersinfotech.com",
+        role: "standard",
+        permissions: ["view_dashboard", "view_projects"],
         last_login: null,
-      });
-      setPermissions(me.permissions ?? []);
+      };
 
-      navigate(resolveLandingPath(me, me.permissions ?? []), { replace: true });
+      setUser(standardUser);
+      setPermissions(standardUser.permissions);
+
+      navigate(resolveLandingPath(standardUser, standardUser.permissions), { replace: true });
     } catch (err: any) {
       console.error(err);
       setError("Failed to load user profile. Make sure the backend is running.");
@@ -419,7 +427,7 @@ export default function LoginPage() {
 
           <Form
             layout="vertical"
-            onFinish={() => onFinish({ username: "HIT-001", password: "HIT-001" })}
+            onFinish={onFinish}
             style={{ marginTop: 24 }}
           >
             <Form.Item
