@@ -14,7 +14,7 @@ export default defineConfig({
     port: 3000,
     proxy: {
       "/pmt/api": {
-        target: "http://localhost:8000",
+        target: "http://localhost:8045",
         changeOrigin: true,
       },
     },

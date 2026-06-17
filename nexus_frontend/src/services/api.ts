@@ -98,21 +98,19 @@ client.interceptors.response.use(
 
       try {
         // Call refresh endpoint (bypass our interceptor by using axios directly)
-        const { data } = await axios.post<{
-          access_token: string;
-          refresh_token?: string;
-        }>(
+        const { data } = await axios.post<any>(
           `${API_BASE}/auth/token/refresh/`,
           { refresh_token: refreshToken },
           { headers: { "Content-Type": "application/json" } }
         );
 
-        const newAccessToken = data.access_token;
+        const newAccessToken = data.access_token || data.access;
 
         // Persist new tokens
         useAuthStore.getState().setToken(newAccessToken);
-        if (data.refresh_token) {
-          useAuthStore.getState().setRefreshToken(data.refresh_token);
+        const newRefreshToken = data.refresh_token || data.refresh;
+        if (newRefreshToken) {
+          useAuthStore.getState().setRefreshToken(newRefreshToken);
         }
 
         // Unblock all queued requests with the new token

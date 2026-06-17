@@ -132,8 +132,9 @@ export default function LoginPage() {
     setError(null);
     try {
       const res = await post<any>("/auth/token/", values);
-      setToken(res.access_token);
-      if (res.refresh_token) setRefreshToken(res.refresh_token);
+      setToken(res.access_token || res.access);
+      const refresh = res.refresh_token || res.refresh;
+      if (refresh) setRefreshToken(refresh);
 
       const { get: apiGet } = await import("@/services/api");
       const me = await apiGet<any>("/users/me/");
