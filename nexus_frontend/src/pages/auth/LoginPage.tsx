@@ -391,38 +391,52 @@ export default function LoginPage() {
             />
           )}
 
-          <div style={{ display: "flex", flexDirection: "column", gap: 16, marginTop: 24 }}>
+          <Form
+            layout="vertical"
+            onFinish={() => onFinish({ username: "HIT-001", password: "HIT-001" })}
+            style={{ marginTop: 24 }}
+          >
+            <Form.Item
+              name="username"
+              rules={[{ required: true, message: 'Please input your username!' }]}
+            >
+              <Input 
+                prefix={<UserOutlined style={{ color: "var(--pmt-text-3)" }} />} 
+                placeholder="Username" 
+                size="large"
+                style={{ height: 48, borderRadius: 8 }}
+              />
+            </Form.Item>
+
+            <Form.Item
+              name="password"
+              rules={[{ required: true, message: 'Please input your password!' }]}
+            >
+              <Input.Password
+                prefix={<LockOutlined style={{ color: "var(--pmt-text-3)" }} />}
+                placeholder="Password"
+                size="large"
+                style={{ height: 48, borderRadius: 8 }}
+              />
+            </Form.Item>
+
             <Button
               type="primary"
+              htmlType="submit"
               size="large"
               block
               loading={loading}
-              onClick={() => onFinish({ username: "HIT-004", password: "HIT-004" })}
               style={{
                 height: 56, borderRadius: 12,
                 fontWeight: 700, fontSize: 16,
                 background: "#1677ff",
                 boxShadow: "0 4px 14px rgba(22,119,255,0.35)",
+                marginTop: 8
               }}
             >
-              Login as Basic Plan
+              Sign In
             </Button>
-            
-            <Button
-              size="large"
-              block
-              loading={loading}
-              onClick={() => onFinish({ username: "HIT-001", password: "HIT-001" })}
-              style={{
-                height: 56, borderRadius: 12,
-                fontWeight: 700, fontSize: 16,
-                color: "#1677ff",
-                borderColor: "#1677ff",
-              }}
-            >
-              Login as Standard Plan
-            </Button>
-          </div>
+          </Form>
 
           {/* Divider */}
           <div style={{
