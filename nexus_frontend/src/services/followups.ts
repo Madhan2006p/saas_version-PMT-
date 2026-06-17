@@ -1,10 +1,10 @@
 import { get, post, patch, del } from "./api";
 
 export const FOLLOWUP_PRIORITIES = [
-  { value: "IMPORTANT", label: "Important", color: "#dc2626" },
-  { value: "HIGH",      label: "High",      color: "#ea580c" },
-  { value: "MEDIUM",    label: "Medium",    color: "#d97706" },
-  { value: "LOW",       label: "Low",       color: "#6b7280" },
+  { value: "IMPORTANT", label: "Important", color: "#dc2626" }, // Red
+  { value: "HIGH",      label: "High",      color: "#ef4444" }, // Red
+  { value: "MEDIUM",    label: "Medium",    color: "#eab308" }, // Yellow
+  { value: "LOW",       label: "Low",       color: "#3b82f6" }, // Blue
 ] as const;
 
 export interface FollowUpItem {
