@@ -119,6 +119,53 @@ const WAVE_CSS = `
     0%,100% { transform: translate(0px,0px) scale(1) rotate(0deg); border-radius: 56% 44% 38% 62% / 44% 56% 44% 56%; }
     50%      { transform: translate(-40px,-60px) scale(1.15) rotate(-15deg); border-radius: 44% 56% 62% 38% / 56% 44% 56% 44%; }
   }
+  .login-wrapper {
+    display: flex;
+    min-height: 100vh;
+    font-family: 'Inter', sans-serif;
+    flex-direction: row;
+  }
+  .left-panel {
+    flex: 0 0 46%;
+    background: #060f1e;
+    display: flex;
+    flex-direction: column;
+    padding: 44px 52px;
+    position: relative;
+    overflow: hidden;
+  }
+  .right-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: var(--pmt-surface);
+    padding: 48px 40px;
+    position: relative;
+  }
+  .feature-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  @media (max-width: 900px) {
+    .login-wrapper {
+      flex-direction: column;
+    }
+    .left-panel {
+      flex: none;
+      padding: 32px 24px;
+      min-height: auto;
+    }
+    .right-panel {
+      padding: 32px 20px;
+      flex: 1;
+    }
+    .feature-grid {
+      grid-template-columns: 1fr;
+    }
+  }
 `;
 
 export default function LoginPage() {
@@ -153,18 +200,10 @@ export default function LoginPage() {
   };
 
   return (
-    <div style={{ display: "flex", minHeight: "100vh", fontFamily: "'Inter', sans-serif" }}>
+    <div className="login-wrapper">
 
       {/* ── Left brand panel ── */}
-      <div style={{
-        flex: "0 0 46%",
-        background: "#060f1e",
-        display: "flex",
-        flexDirection: "column",
-        padding: "44px 52px",
-        position: "relative",
-        overflow: "hidden",
-      }}>
+      <div className="left-panel">
         {/* Inject wave keyframes */}
         <style>{WAVE_CSS}</style>
 
@@ -277,11 +316,7 @@ export default function LoginPage() {
           </Text>
 
           {/* Feature grid — 2 × 3 */}
-          <div style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr",
-            gap: 10,
-          }}>
+          <div className="feature-grid">
             {FEATURES.map((f, i) => (
               <div key={i} style={{
                 background: "rgba(255,255,255,0.045)",
@@ -340,16 +375,7 @@ export default function LoginPage() {
       </div>
 
       {/* ── Right form panel ── */}
-      <div style={{
-        flex: 1,
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        background: "var(--pmt-surface)",
-        padding: "48px 40px",
-        position: "relative",
-      }}>
+      <div className="right-panel">
         <div style={{ position: "absolute", top: 20, right: 24 }}>
           <ThemeToggle />
         </div>
