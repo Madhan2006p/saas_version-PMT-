@@ -580,6 +580,13 @@ export default function FollowUpsPage() {
           items={listItems}
           loading={listLoading}
           onSelect={(item) => setDetailItem(item)}
+          onDateClick={(date) => {
+            if (!canCreate) return;
+            setEditing(null);
+            form.resetFields();
+            form.setFieldsValue({ due_date: date });
+            setModalOpen(true);
+          }}
         />
       ) : (
         <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>

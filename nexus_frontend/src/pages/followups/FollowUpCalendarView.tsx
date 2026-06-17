@@ -41,7 +41,7 @@ function TimedEventBlock({
   return (
     <button
       type="button"
-      onClick={() => onSelect(item)}
+      onClick={(e) => { e.stopPropagation(); onSelect(item); }}
       style={{
         position: "absolute",
         left: 4,
@@ -130,8 +130,8 @@ function EventPill({
 }
 
 function MonthView({
-  cursor, items, onSelect,
-}: { cursor: Dayjs; items: FollowUpItem[]; onSelect: (item: FollowUpItem) => void }) {
+  cursor, items, onSelect, onDateClick
+}: { cursor: Dayjs; items: FollowUpItem[]; onSelect: (item: FollowUpItem) => void; onDateClick?: (date: Dayjs) => void }) {
   const weeks = useMemo(() => {
     const start = cursor.startOf("month").startOf("week");
     const end = cursor.endOf("month").endOf("week");
@@ -171,12 +171,14 @@ function MonthView({
             return (
               <div
                 key={day.format("YYYY-MM-DD")}
+                onClick={() => onDateClick?.(day)}
                 style={{
                   borderRight: day.day() < 6 ? BORDER : undefined,
                   padding: "4px 6px 6px",
                   background: inMonth ? "var(--pmt-surface)" : "var(--pmt-surface-2)",
                   opacity: inMonth ? 1 : 0.55,
                   verticalAlign: "top",
+                  cursor: onDateClick ? "pointer" : "default",
                 }}
               >
                 <div style={{ textAlign: "right", marginBottom: 4 }}>
@@ -206,8 +208,8 @@ function MonthView({
 }
 
 function DayView({
-  cursor, items, onSelect,
-}: { cursor: Dayjs; items: FollowUpItem[]; onSelect: (item: FollowUpItem) => void }) {
+  cursor, items, onSelect, onDateClick
+}: { cursor: Dayjs; items: FollowUpItem[]; onSelect: (item: FollowUpItem) => void; onDateClick?: (date: Dayjs) => void }) {
   const today = dayjs();
   const isToday = cursor.isSame(today, "day");
   const hours = useHourSlots();
@@ -251,7 +253,7 @@ function DayView({
 
       <div style={{ display: "grid", gridTemplateColumns: "56px 1fr", maxHeight: 640, overflowY: "auto" }}>
         <HourLabels hours={hours} />
-        <div style={{ position: "relative", borderLeft: BORDER }}>
+        <div style={{ position: "relative", borderLeft: BORDER, cursor: onDateClick ? "pointer" : "default" }} onClick={() => onDateClick?.(cursor)}>
           {hours.map((h) => (
             <div key={h} style={{ height: HOUR_HEIGHT, borderTop: h > HOUR_START ? BORDER : undefined }} />
           ))}
@@ -265,8 +267,8 @@ function DayView({
 }
 
 function WeekView({
-  cursor, items, onSelect,
-}: { cursor: Dayjs; items: FollowUpItem[]; onSelect: (item: FollowUpItem) => void }) {
+  cursor, items, onSelect, onDateClick
+}: { cursor: Dayjs; items: FollowUpItem[]; onSelect: (item: FollowUpItem) => void; onDateClick?: (date: Dayjs) => void }) {
   const weekStart = cursor.startOf("week");
   const days = useMemo(() => Array.from({ length: 7 }, (_, i) => weekStart.add(i, "day")), [weekStart]);
   const today = dayjs();
@@ -309,7 +311,7 @@ function WeekView({
       <div style={{ display: "grid", gridTemplateColumns: "56px repeat(7, 1fr)", maxHeight: 520, overflowY: "auto" }}>
         <HourLabels hours={hours} />
         {days.map((day) => (
-          <div key={`grid-${day.format()}`} style={{ position: "relative", borderLeft: BORDER }}>
+          <div key={`grid-${day.format()}`} style={{ position: "relative", borderLeft: BORDER, cursor: onDateClick ? "pointer" : "default" }} onClick={() => onDateClick?.(day)}>
             {hours.map((h) => (
               <div key={h} style={{ height: HOUR_HEIGHT, borderTop: h > HOUR_START ? BORDER : undefined }} />
             ))}
@@ -324,11 +326,12 @@ function WeekView({
 }
 
 export default function FollowUpCalendarView({
-  items, loading, onSelect,
+  items, loading, onSelect, onDateClick
 }: {
   items: FollowUpItem[];
   loading?: boolean;
   onSelect: (item: FollowUpItem) => void;
+  onDateClick?: (date: Dayjs) => void;
 }) {
   const [cursor, setCursor] = useState(() => dayjs());
   const [mode, setMode] = useState<CalendarMode>("month");
@@ -383,11 +386,11 @@ export default function FollowUpCalendarView({
       {scheduled.length === 0 ? (
         <Empty description="No scheduled follow-ups — add a due date to appear on the calendar" />
       ) : mode === "month" ? (
-        <MonthView cursor={cursor} items={scheduled} onSelect={onSelect} />
+        <MonthView cursor={cursor} items={scheduled} onSelect={onSelect} onDateClick={onDateClick} />
       ) : mode === "week" ? (
-        <WeekView cursor={cursor} items={scheduled} onSelect={onSelect} />
+        <WeekView cursor={cursor} items={scheduled} onSelect={onSelect} onDateClick={onDateClick} />
       ) : (
-        <DayView cursor={cursor} items={scheduled} onSelect={onSelect} />
+        <DayView cursor={cursor} items={scheduled} onSelect={onSelect} onDateClick={onDateClick} />
       )}
 
       <Text type="secondary" style={{ display: "block", marginTop: 12, fontSize: 12 }}>
