@@ -145,7 +145,10 @@ export default function NotificationBell({ iconColor = "inherit" }: Notification
   const grouped = useMemo(() => {
     const map = new Map<string, { cat: typeof CATEGORIES[number] | { key: string; label: string; icon: React.ReactNode }; items: Notification[] }>();
 
+    if (!Array.isArray(items)) return [];
+
     for (const notif of items) {
+      if (!notif || typeof notif !== "object" || typeof notif.event_type !== "string") continue;
       const cat = matchCategory(notif.event_type);
       const key = cat.key;
       if (!map.has(key)) map.set(key, { cat, items: [] });
