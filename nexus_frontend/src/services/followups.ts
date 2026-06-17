@@ -4,7 +4,7 @@ export const FOLLOWUP_PRIORITIES = [
   { value: "IMPORTANT", label: "Important", color: "#dc2626" }, // Red
   { value: "HIGH",      label: "High",      color: "#ef4444" }, // Red
   { value: "MEDIUM",    label: "Medium",    color: "#eab308" }, // Yellow
-  { value: "LOW",       label: "Low",       color: "#3b82f6" }, // Blue
+  { value: "LOW",       label: "Low",       color: "#10b981" }, // Green
 ] as const;
 
 export interface FollowUpItem {
