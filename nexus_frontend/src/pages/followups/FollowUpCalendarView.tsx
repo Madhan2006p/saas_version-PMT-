@@ -13,7 +13,7 @@ import {
 dayjs.extend(isoWeek);
 
 const { Text } = Typography;
-const BORDER = "1px solid #dadce0";
+const BORDER = "1px solid var(--pmt-border)";
 const MAX_MONTH_EVENTS = 3;
 type CalendarMode = "day" | "week" | "month";
 
@@ -78,8 +78,8 @@ function HourLabels({ hours }: { hours: number[] }) {
           key={h}
           style={{
             height: HOUR_HEIGHT,
-            fontSize: 10,
-            color: "#70757a",
+            fontSize: 11,
+            color: "var(--pmt-text-3)",
             textAlign: "right",
             paddingRight: 8,
             paddingTop: 2,
@@ -155,7 +155,7 @@ function MonthView({
         borderBottom: BORDER, background: "var(--pmt-surface-2)",
       }}>
         {WEEKDAYS.map((w) => (
-          <div key={w} style={{ padding: "10px 8px", textAlign: "center", fontSize: 11, fontWeight: 600, color: "#70757a" }}>
+          <div key={w} style={{ padding: "10px 8px", textAlign: "center", fontSize: 11, fontWeight: 600, color: "var(--pmt-text-2)" }}>
             {w.toUpperCase()}
           </div>
         ))}
@@ -185,9 +185,9 @@ function MonthView({
                   <span style={{
                     display: "inline-flex", alignItems: "center", justifyContent: "center",
                     width: 28, height: 28, borderRadius: "50%",
-                    fontSize: 12, fontWeight: isToday ? 600 : 400,
-                    background: isToday ? "#1a73e8" : "transparent",
-                    color: isToday ? "#fff" : inMonth ? "var(--pmt-text)" : "#70757a",
+                    fontSize: 13, fontWeight: isToday ? 600 : 500,
+                    background: isToday ? "var(--pmt-primary)" : "transparent",
+                    color: isToday ? "#fff" : inMonth ? "var(--pmt-text)" : "var(--pmt-text-3)",
                   }}>
                     {day.date()}
                   </span>
@@ -224,14 +224,14 @@ function DayView({
       }}>
         <div />
         <div style={{ padding: "12px 16px", borderLeft: BORDER }}>
-          <div style={{ fontSize: 11, color: isToday ? "#1a73e8" : "#70757a", fontWeight: 600, letterSpacing: 0.5 }}>
+          <div style={{ fontSize: 11, color: isToday ? "var(--pmt-primary)" : "var(--pmt-text-2)", fontWeight: 600, letterSpacing: 0.5 }}>
             {WEEKDAYS[cursor.day()].toUpperCase()}
           </div>
           <div style={{
             display: "inline-flex", alignItems: "center", justifyContent: "center",
             width: 48, height: 48, borderRadius: "50%", marginTop: 6,
             fontSize: 28, fontWeight: isToday ? 500 : 400, lineHeight: 1,
-            background: isToday ? "#1a73e8" : "transparent",
+            background: isToday ? "var(--pmt-primary)" : "transparent",
             color: isToday ? "#fff" : "var(--pmt-text)",
           }}>
             {cursor.date()}
@@ -243,7 +243,7 @@ function DayView({
         display: "grid", gridTemplateColumns: "56px 1fr",
         borderBottom: BORDER, minHeight: allDay.length ? 36 : 28,
       }}>
-        <div style={{ fontSize: 10, color: "#70757a", padding: "8px 4px", textAlign: "right" }}>all-day</div>
+        <div style={{ fontSize: 11, color: "var(--pmt-text-3)", padding: "8px 4px", textAlign: "right" }}>all-day</div>
         <div style={{ borderLeft: BORDER, padding: "4px 8px" }}>
           {allDay.map((item) => (
             <EventPill key={item.id} item={item} onClick={() => onSelect(item)} />
@@ -283,10 +283,10 @@ function WeekView({
           const isToday = day.isSame(today, "day");
           return (
             <div key={day.format()} style={{ padding: "8px 4px", textAlign: "center", borderLeft: BORDER }}>
-              <div style={{ fontSize: 11, color: "#70757a", fontWeight: 500 }}>{WEEKDAYS[day.day()].toUpperCase()}</div>
+              <div style={{ fontSize: 11, color: "var(--pmt-text-2)", fontWeight: 500 }}>{WEEKDAYS[day.day()].toUpperCase()}</div>
               <div style={{
                 fontSize: 22, fontWeight: isToday ? 500 : 400, lineHeight: 1.2,
-                color: isToday ? "#1a73e8" : "var(--pmt-text)",
+                color: isToday ? "var(--pmt-primary)" : "var(--pmt-text)",
               }}>
                 {day.date()}
               </div>
@@ -297,7 +297,7 @@ function WeekView({
 
       {/* All-day row */}
       <div style={{ display: "grid", gridTemplateColumns: "56px repeat(7, 1fr)", borderBottom: BORDER, minHeight: 28 }}>
-        <div style={{ fontSize: 10, color: "#70757a", padding: "6px 4px", textAlign: "right" }}>all-day</div>
+        <div style={{ fontSize: 11, color: "var(--pmt-text-3)", padding: "6px 4px", textAlign: "right" }}>all-day</div>
         {days.map((day) => (
           <div key={`allday-${day.format()}`} style={{ borderLeft: BORDER, padding: "2px 4px" }}>
             {allDayItems(items, day).map((item) => (
